@@ -10,14 +10,13 @@ import open3d as o3d
 
 def callback(message):
     pc = ros_numpy.numpify(message)
-    points = np.zeros((pc.shape[0],3)) # (pc.shape[0])行 3列の初期化配列
+    points = np.zeros((pc.shape[0],3))
     points[:,0]=pc['x']
     points[:,1]=pc['y']
     points[:,2]=pc['z']
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(np.array(points, dtype=np.float32))
     o3d.io.write_point_cloud("/workspace/docker_bind/test.pcd", pcd)
-
 
 def subscriber():
     #ノードの初期化
