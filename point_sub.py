@@ -17,7 +17,7 @@ def lidar_callback(message):
     points[:,2]=pc['z']
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(np.array(points, dtype=np.float32))
-    o3d.io.write_point_cloud("/workspace/docker_bind/test.pcd", pcd)
+    o3d.io.write_point_cloud("/workspace/docker_bind_Local/test.pcd", pcd)
 
 def imu_callback(imu_data):
     print("IMU Data:")
@@ -27,7 +27,7 @@ def imu_callback(imu_data):
     print("Linear Acceleration: x=", imu_data.linear_acceleration.x, ", y=", imu_data.linear_acceleration.y, ", z=", imu_data.linear_acceleration.z)
     print("")
     time.sleep(1)
-    with open("/workspace/docker_bind/log_imu.csv", mode="a") as f:
+    with open("/workspace/docker_bind_Local/log_imu.csv", mode="a") as f:
         f.write(str(imu_data.header.stamp) + "," + str(imu_data.angular_velocity.x) + "," + str(imu_data.angular_velocity.y) + "," + str(imu_data.angular_velocity.z) + "\r\n")
 
 def subscriber():
