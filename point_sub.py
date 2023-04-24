@@ -20,15 +20,18 @@ def lidar_callback(message):
     o3d.io.write_point_cloud("/workspace/docker_bind_Local/test.pcd", pcd)
 
 def imu_callback(imu_data):
-    print("IMU Data:")
-    print("Timestamp: ", imu_data.header.stamp)
-    print("Orientation: x=", imu_data.orientation.x, ", y=", imu_data.orientation.y, ", z=", imu_data.orientation.z, ", w=", imu_data.orientation.w)
-    print("Angular Velocity: x=", imu_data.angular_velocity.x, ", y=", imu_data.angular_velocity.y, ", z=", imu_data.angular_velocity.z)
-    print("Linear Acceleration: x=", imu_data.linear_acceleration.x, ", y=", imu_data.linear_acceleration.y, ", z=", imu_data.linear_acceleration.z)
     print("")
-    time.sleep(1)
-    with open("/workspace/docker_bind_Local/log_imu.csv", mode="a") as f:
-        f.write(str(imu_data.header.stamp) + "," + str(imu_data.angular_velocity.x) + "," + str(imu_data.angular_velocity.y) + "," + str(imu_data.angular_velocity.z) + "\r\n")
+    print("========== IMU Data ==========")
+    print("Timestamp: ", imu_data.header.stamp)
+    print("Angular Velocity: \n  x=", imu_data.angular_velocity.x, "\n  y=", imu_data.angular_velocity.y, "\n  z=", imu_data.angular_velocity.z)
+    print("Linear Acceleration: \n  x=", imu_data.linear_acceleration.x, "\n  y=", imu_data.linear_acceleration.y, "\n  z=", imu_data.linear_acceleration.z)
+    print("==============================")
+    print("")
+    with open("/workspace/docker_bind_Local/log_imu00.csv", mode="a") as f:
+        f.write(str(imu_data.header.stamp))
+        f.write("," + str(imu_data.angular_velocity.x) + "," + str(imu_data.angular_velocity.y) + "," + str(imu_data.angular_velocity.z))
+        f.write("," + str(imu_data.linear_acceleration.x) + "," + str(imu_data.linear_acceleration.y) + "," + str(imu_data.linear_acceleration.z) + "\r\n")
+    # time.sleep(1)
 
 def subscriber():
     #ノードの初期化
