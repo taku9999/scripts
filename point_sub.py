@@ -8,8 +8,17 @@ import numpy as np
 import ros_numpy
 import open3d as o3d
 import time
+import datetime
+
+filepass = "/workspace/docker_bind_Local/lidar"
+
+def get_time():
+    now_time = datetime.datetime.now() + datetime.timedelta(hours=9)
+    time_str = str(now_time.strftime("%Y-%m-%d_%H:%M:%S_%f")[:-4])
+    return time_str
 
 def lidar_callback(message):
+    print("========== PCD data receive ==========")
     pc = ros_numpy.numpify(message)
     points = np.zeros((pc.shape[0],3))
     points[:,0]=pc['x']
@@ -17,21 +26,15 @@ def lidar_callback(message):
     points[:,2]=pc['z']
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(np.array(points, dtype=np.float32))
-    o3d.io.write_point_cloud("/workspace/docker_bind_Local/test.pcd", pcd)
+    o3d.io.write_point_cloud(filepass + "/" + get_time() +".pcd", pcd)
 
 def imu_callback(imu_data):
-    print("")
-    print("========== IMU Data ==========")
-    print("Timestamp: ", imu_data.header.stamp)
-    print("Angular Velocity: \n  x=", imu_data.angular_velocity.x, "\n  y=", imu_data.angular_velocity.y, "\n  z=", imu_data.angular_velocity.z)
-    print("Linear Acceleration: \n  x=", imu_data.linear_acceleration.x, "\n  y=", imu_data.linear_acceleration.y, "\n  z=", imu_data.linear_acceleration.z)
-    print("==============================")
-    print("")
-    with open("/workspace/docker_bind_Local/log_imu00.csv", mode="a") as f:
-        f.write(str(imu_data.header.stamp))
+    print("========== IMU Data receive ==========")
+    with open(filepass + "/imu_log.csv", mode="a") as f:
+        f.write(get_time())
         f.write("," + str(imu_data.angular_velocity.x) + "," + str(imu_data.angular_velocity.y) + "," + str(imu_data.angular_velocity.z))
         f.write("," + str(imu_data.linear_acceleration.x) + "," + str(imu_data.linear_acceleration.y) + "," + str(imu_data.linear_acceleration.z) + "\r\n")
-    # time.sleep(1)
+    # time.sleep(5)
 
 def subscriber():
     #ノードの初期化
